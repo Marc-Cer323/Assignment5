@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Login from './login';
 import Register from './register';
-import { logoutUser } from '../actions/authActions';
 import { Nav } from 'react-bootstrap';
 
 const Authentication = () => {
   const [activeTab, setActiveTab] = useState('login');
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const loggedIn = useSelector((state) => state.auth.loggedIn);
