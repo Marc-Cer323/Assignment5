@@ -5,6 +5,30 @@ import { Card, ListGroup, ListGroupItem, Image, Form, Button, Table, Badge } fro
 import { BsStarFill, BsStar } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
 
+const StarPicker = ({ rating, onRatingChange }) => {
+    const [hovered, setHovered] = useState(0);
+    return (
+        <div style={{ display: 'flex', gap: '6px', fontSize: '2rem', cursor: 'pointer' }}>
+            {Array.from({ length: 5 }, (_, i) => (
+                <span
+                    key={i}
+                    onClick={() => onRatingChange(i + 1)}
+                    onMouseEnter={() => setHovered(i + 1)}
+                    onMouseLeave={() => setHovered(0)}
+                >
+                    {i < (hovered || rating)
+                        ? <BsStarFill color="#f5c518" />
+                        : <BsStar color="#ccc" />
+                    }
+                </span>
+            ))}
+            <span style={{ fontSize: '1rem', alignSelf: 'center', marginLeft: '8px', color: '#555' }}>
+                {rating} / 5
+            </span>
+        </div>
+    );
+};
+
 const MovieDetail = () => {
     const dispatch = useDispatch();
     const { movieTitle } = useParams();
@@ -124,16 +148,9 @@ const MovieDetail = () => {
                     <Form onSubmit={handleSubmitReview}>
                         <Form.Group className="mb-3">
                             <Form.Label>Rating</Form.Label>
-                            <Form.Select
-                                value={rating}
-                                onChange={e => setRating(Number(e.target.value))}
-                            >
-                                <option value={5}>★★★★★ (5)</option>
-                                <option value={4}>★★★★☆ (4)</option>
-                                <option value={3}>★★★☆☆ (3)</option>
-                                <option value={2}>★★☆☆☆ (2)</option>
-                                <option value={1}>★☆☆☆☆ (1)</option>
-                            </Form.Select>
+                            <div>
+                                <StarPicker rating={rating} onRatingChange={setRating} />
+                            </div>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Review</Form.Label>

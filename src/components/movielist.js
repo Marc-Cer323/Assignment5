@@ -42,26 +42,28 @@ function MovieList() {
         <Carousel onSelect={handleSelect} className="bg-dark text-light p-4 rounded">
             {memoizedMovies.map((movie) => (
                 <Carousel.Item key={movie._id}>
-                    <Nav.Link
-                        as={Link}
-                        to={`/movie/${encodeURIComponent(movie.title)}`}
-                        onClick={() => handleClick(movie)}
-                    >
-                        <Image
-                            className="image"
-                            src={movie.imageUrl || 'https://via.placeholder.com/300x450?text=No+Image'}
-                            thumbnail
-                            style={{ maxHeight: '400px', objectFit: 'cover' }}
-                        />
-                    </Nav.Link>
-                    <Carousel.Caption>
-                        <h3>{movie.title}</h3>
-                        <p>
-                            <BsStarFill color="#f5c518" />
-                            {' '}{movie.avgRating ? movie.avgRating.toFixed(1) : 'No ratings'} &nbsp;|&nbsp; {movie.releaseDate} &nbsp;|&nbsp; {movie.genre}
-                        </p>
-                        <p>{movie.movieReviews ? `${movie.movieReviews.length} review(s)` : '0 reviews'}</p>
-                    </Carousel.Caption>
+                    <div className="d-flex flex-column align-items-center">
+                        <Nav.Link
+                            as={Link}
+                            to={`/movie/${encodeURIComponent(movie.title)}`}
+                            onClick={() => handleClick(movie)}
+                        >
+                            <Image
+                                className="image"
+                                src={movie.imageUrl || 'https://via.placeholder.com/300x450?text=No+Image'}
+                                thumbnail
+                                style={{ maxHeight: '400px', objectFit: 'cover' }}
+                            />
+                        </Nav.Link>
+                        <div className="text-center text-light mt-3 pb-4">
+                            <h3>{movie.title}</h3>
+                            <p>
+                                <BsStarFill color="#f5c518" />
+                                {' '}{movie.avgRating ? movie.avgRating.toFixed(1) : 'No ratings'} &nbsp;|&nbsp; {movie.releaseDate} &nbsp;|&nbsp; {movie.genre}
+                            </p>
+                            <p>{movie.movieReviews ? `${movie.movieReviews.length} review(s)` : '0 reviews'}</p>
+                        </div>
+                    </div>
                 </Carousel.Item>
             ))}
         </Carousel>
