@@ -1,5 +1,4 @@
 import actionTypes from '../constants/actionTypes';
-//import runtimeEnv from '@mars/heroku-js-runtime-env'
 const env = process.env;
 
 function userLoggedIn(username) {
@@ -25,17 +24,18 @@ export function submitLogin(data) {
             },
             body: JSON.stringify(data),
             mode: 'cors'
-        }).then((response) => {
+        }).then(async (response) => {
+            const json = await response.json();
             if (!response.ok) {
-                throw Error(response.statusText);
+                return { success: false, message: json.msg || json.message || 'Login failed. Please try again.' };
             }
-            return response.json()
-        }).then((res) => {
             localStorage.setItem('username', data.username);
-            localStorage.setItem('token', res.token);
-
+            localStorage.setItem('token', json.token);
             dispatch(userLoggedIn(data.username));
-        }).catch((e) => console.log(e));
+            return { success: true };
+        }).catch(() => {
+            return { success: false, message: 'Unable to connect to server. Please try again.' };
+        });
     }
 }
 
@@ -49,14 +49,16 @@ export function submitRegister(data) {
             },
             body: JSON.stringify(data),
             mode: 'cors'
-        }).then((response) => {
+        }).then(async (response) => {
+            const json = await response.json();
             if (!response.ok) {
-                throw Error(response.statusText);
+                return { success: false, message: json.msg || json.message || 'Registration failed. Please try again.' };
             }
-            return response.json()
-        }).then((res) => {
-            dispatch(submitLogin(data));
-        }).catch((e) => console.log(e));
+            // Auto-login after successful register
+            return dispatch(submitLogin(data));
+        }).catch(() => {
+            return { success: false, message: 'Unable to connect to server. Please try again.' };
+        });
     }
 }
 
@@ -64,6 +66,6 @@ export function logoutUser() {
     return dispatch => {
         localStorage.removeItem('username');
         localStorage.removeItem('token');
-        dispatch(logout())
+        dispatch(logout());
     }
 }

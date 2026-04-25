@@ -1,46 +1,73 @@
 import React, { useState } from 'react';
 import { submitRegister } from '../actions/authActions';
 import { useDispatch } from 'react-redux';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 
 function Register() {
-    const [details, setDetails] = useState({
-        name: '',
-        username: '',
-        password: ''
-    });
-
+    const [details, setDetails] = useState({ name: '', username: '', password: '' });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const updateDetails = (event) => {
-        setDetails({
-          ...details,
-            [event.target.id]: event.target.value
-        });
+        setDetails({ ...details, [event.target.id]: event.target.value });
     };
 
-    const register = () => {
-        dispatch(submitRegister(details));
+    const register = async (event) => {
+        event.preventDefault();
+        if (!details.username || !details.password) {
+            setError('Please enter both username and password.');
+            return;
+        }
+        setLoading(true);
+        setError('');
+        const result = await dispatch(submitRegister(details));
+        if (result && !result.success) {
+            setError(result.message);
+        }
+        setLoading(false);
     };
 
     return (
         <div className="register-container">
-            <Form className='register-form bg-dark text-light p-4 rounded'>
-                <Form.Group controlId="name">
+            <Form onSubmit={register} className="register-form bg-dark text-light p-4 rounded">
+                {error && <Alert variant="danger">{error}</Alert>}
+
+                <Form.Group controlId="name" className="mb-3">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control onChange={updateDetails} value={details.name} type="text" placeholder="Name" />
+                    <Form.Control
+                        onChange={updateDetails}
+                        value={details.name}
+                        type="text"
+                        placeholder="Name (optional)"
+                    />
                 </Form.Group>
 
-                <Form.Group controlId="username">
+                <Form.Group controlId="username" className="mb-3">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control onChange={updateDetails} value={details.username} autoComplete="username" type="text" placeholder="Enter username" />
+                    <Form.Control
+                        onChange={updateDetails}
+                        value={details.username}
+                        autoComplete="username"
+                        type="text"
+                        placeholder="Enter username"
+                    />
                 </Form.Group>
 
-                <Form.Group controlId="password">
+                <Form.Group controlId="password" className="mb-3">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control onChange={updateDetails} value={details.password} autoComplete="current-password" type="password" placeholder="Password" />
+                    <Form.Control
+                        onChange={updateDetails}
+                        value={details.password}
+                        autoComplete="new-password"
+                        type="password"
+                        placeholder="Password"
+                    />
                 </Form.Group>
-                <Button onClick={register}>Register</Button>
+
+                <Button type="submit" disabled={loading}>
+                    {loading ? <><Spinner animation="border" size="sm" /> Registering...</> : 'Register'}
+                </Button>
             </Form>
         </div>
     );
