@@ -7,7 +7,6 @@ import { logoutUser } from "../actions/authActions";
 function MovieHeader() {
     const dispatch = useDispatch();
     const loggedIn = useSelector((state) => state.auth.loggedIn);
-    const selectedMovie = useSelector((state) => state.movie.selectedMovie);
     
     const logout = () => {
         dispatch(logoutUser());
