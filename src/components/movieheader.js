@@ -22,6 +22,9 @@ function MovieHeader() {
                     <Nav.Link as={NavLink} to="/movielist" disabled={!loggedIn}>
                         Movie List
                     </Nav.Link>
+                    <Nav.Link as={NavLink} to="/search" disabled={!loggedIn}>
+                        Search
+                    </Nav.Link>
                     <Nav.Link as={NavLink} to="/signin">
                         {loggedIn? (
                         <span onClick={logout} style={{ cursor: 'pointer' }}>

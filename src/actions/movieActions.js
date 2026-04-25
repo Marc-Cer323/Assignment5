@@ -75,9 +75,9 @@ export function submitReview(movieId, review, rating) {
     };
 }
 
-// Search movies by partial title or actor name
+// Search movies by partial title or actor name - returns results without overwriting movie list
 export function searchMovies(query) {
-    return dispatch => {
+    return () => {
         return fetch(`${env.REACT_APP_API_URL}/search`, {
             method: 'POST',
             headers: {
@@ -89,7 +89,6 @@ export function searchMovies(query) {
             mode: 'cors'
         })
         .then(res => { if (!res.ok) throw Error(res.statusText); return res.json(); })
-        .then(res => dispatch(moviesFetched(res)))
-        .catch(e => console.log(e));
+        .catch(e => { console.log(e); return []; });
     };
 }
