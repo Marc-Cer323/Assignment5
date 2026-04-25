@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'; // Import useSelector and useDispatch
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Login from './login';
 import Register from './register';
 import { logoutUser } from '../actions/authActions';
-import { Nav, Button } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 
 const Authentication = () => {
   const [activeTab, setActiveTab] = useState('login');
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Retrieve Redux state values
   const loggedIn = useSelector((state) => state.auth.loggedIn);
-  const username = useSelector((state) => state.auth.username);
 
-  // Switch tabs when user selects a tab
+  // Redirect to movie list as soon as user logs in
+  useEffect(() => {
+    if (loggedIn) {
+      navigate('/movielist');
+    }
+  }, [loggedIn, navigate]);
+
   const handleSelect = (selectedKey) => {
     setActiveTab(selectedKey);
   };
 
-  const logout = () => {
-    dispatch(logoutUser());
-  };
-
-  const userNotLoggedIn = (
+  return (
     <div className="auth-container">
-      {/* Render Nav tabs */}
       <Nav variant="tabs" activeKey={activeTab} onSelect={handleSelect} className="mb-3 dark-tabs justify-content-center">
         <Nav.Item>
           <Nav.Link eventKey="login">Login</Nav.Link>
@@ -33,21 +34,9 @@ const Authentication = () => {
           <Nav.Link eventKey="register">Register</Nav.Link>
         </Nav.Item>
       </Nav>
-      {/* Conditionally render based on the active tab */}
       {activeTab === 'register' ? <Register /> : <Login />}
     </div>
   );
-
-  const userLoggedIn = (
-    <div className="text-center">
-      Logged in as: {username}{' '}
-      <Button variant="outline-light" onClick={logout}>
-        Logout
-      </Button>
-    </div>
-  );
-
-  return <div>{loggedIn ? userLoggedIn : userNotLoggedIn}</div>;
 };
 
 export default Authentication;
