@@ -1,0 +1,10 @@
+const actionTypes = {
+    USER_LOGGEDIN: 'USER_LOGGEDIN',
+    USER_LOGOUT: 'USER_LOGOUT',
+    FETCH_MOVIES: 'FETCH_MOVIES',
+    FETCH_MOVIE: 'FETCH_MOVIE',
+    SET_MOVIE: 'SET_MOVIE',
+    SET_REVIEW_SUBMITTED: 'SET_REVIEW_SUBMITTED',
+};
+
+export default actionTypes;
